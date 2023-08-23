@@ -66,7 +66,7 @@ VALIDATE $? "unzip the catalogue artifact"
 npm install &>>$LOGFILE
 VALIDATE $? "Installing npm"
 
-cp /root/roboshop_shell/catalogue.service /etc/systemd/system/catalogue.service &>>$LOGFILE
+cp /home/centos/roboshop-shell/catalogue.service /etc/systemd/system/catalogue.service &>>$LOGFILE
 VALIDATE $? "copying the catalogue service"
 
 systemctl daemon-reload &>>$LOGFILE
@@ -78,7 +78,7 @@ VALIDATE $? "enabling catalogue"
 systemctl start catalogue &>>$LOGFILE
 VALIDATE $? "starting catalogue"
 
-cp /root/roboshop_shell/catalogue.service /etc/yum.repos.d/mongo.repo &>>$LOGFILE
+cp /home/centos/roboshop-shell/catalogue.service /etc/yum.repos.d/mongo.repo &>>$LOGFILE
 VALIDATE $? "Copying mongo repo"
 
 yum install mongodb-org-shell -y &>>$LOGFILE

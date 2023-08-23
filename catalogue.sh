@@ -82,7 +82,7 @@ cp /home/centos/roboshop-shell/catalogue.service /etc/yum.repos.d/mongo.repo &>>
 VALIDATE $? "Copying mongo repo"
 
 yum install mongodb-org-shell -y &>>$LOGFILE
-VALIDATE $? "installing mongo client"
+VALIDATE $? "Installing mongo client"
 
 mongo --host mongodb.devopscollab.tech </app/schema/catalogue.js &>>$LOGFILE
 VALIDATE $? "loading catalogue data into mongodb"

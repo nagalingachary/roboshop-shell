@@ -52,7 +52,7 @@ VALIDATE $? "unzip the catalogue artifact"
 npm install &>>$LOGFILE
 VALIDATE $? "Installing npm"
 
-cp /c/devops/repos/robo-shell/catalogue.service /etc/systemd/system/catalogue.service &>>$LOGFILE
+cp /c/devops/repos/roboshop-shell/catalogue.service /etc/systemd/system/catalogue.service &>>$LOGFILE
 VALIDATE $? "copying the catalogue service"
 
 systemctl daemon-reload &>>$LOGFILE

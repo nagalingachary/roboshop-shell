@@ -35,11 +35,25 @@ VALIDATE $? "Setting up NPM Source"
 yum install nodejs -y &>>$LOGFILE
 VALIDATE $? "Installing Nodejs"
 
-useradd roboshop &>>$LOGFILE
-VALIDATE $? "Add user roboshop"
+USER_ROBOSHOP=$(id roboshop)
+if [ $? -ne 0 ];
+then 
+    echo -e "$Y...USER roboshop is not present so creating one now..$N"
+    useradd roboshop &>>$LOGFILE
+else 
+    echo -e "$G...USER roboshop is already present so  skipping now.$N"
+ fi
 
-mkdir /app &>>$LOGFILE
-VALIDATE $? "creating app directory"
+#checking the app directory created or not
+VALIDATE_APP_DIR=$(cd /app)
+#write a condition to check directory already exist or not
+if [ $? -ne 0 ];
+then 
+    echo -e " $Y /app directory not there so creating one $N"
+    mkdir /app &>>$LOGFILE   
+else
+    echo -e "$G /app directory already present so skipping ....$N" 
+fi
 
 curl -o /tmp/catalogue.zip https://roboshop-builds.s3.amazonaws.com/catalogue.zip &>>$LOGFILE
 VALIDATE $? "downloading catalogue artifact"

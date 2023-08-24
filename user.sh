@@ -38,58 +38,43 @@ VALIDATE $? "Installing NodeJS"
 #once the user is created, if you run this script 2nd time
 # this command will defnitely fail
 # IMPROVEMENT: first check the user already exist or not, if not exist then create
-USER_ROBOSHOP=$(id roboshop)
-if [ $? -ne 0 ];
-then 
-    echo -e "$Y...USER roboshop is not present so creating one now..$N"
-    useradd roboshop &>>$LOGFILE
-else 
-    echo -e "$G...USER roboshop is already present so  skipping now.$N"
-fi
+useradd roboshop &>>$LOGFILE
 
-#checking the app directory created or not
-VALIDATE_APP_DIR=$(cd /app)
 #write a condition to check directory already exist or not
-if [ $? -ne 0 ];
-then 
-    echo -e " $Y /app directory not there so creating one $N"
-    mkdir /app &>>$LOGFILE   
-else
-    echo -e "$G /app directory already present so skipping ....$N" 
-fi
+mkdir /app &>>$LOGFILE
 
-curl -o /tmp/catalogue.zip https://roboshop-builds.s3.amazonaws.com/catalogue.zip &>>$LOGFILE
+curl -o /tmp/user.zip https://roboshop-builds.s3.amazonaws.com/user.zip &>>$LOGFILE
 
-VALIDATE $? "downloading catalogue artifact"
+VALIDATE $? "downloading user artifact"
 
 cd /app &>>$LOGFILE
 
 VALIDATE $? "Moving into app directory"
 
-unzip -FF /tmp/catalogue.zip &>>$LOGFILE
+unzip /tmp/user.zip &>>$LOGFILE
 
-VALIDATE $? "unzipping catalogue"
+VALIDATE $? "unzipping user"
 
 npm install &>>$LOGFILE
 
 VALIDATE $? "Installing dependencies"
 
-# give full path of catalogue.service because we are inside /app
-cp /home/centos/roboshop-shell/catalogue.service /etc/systemd/system/catalogue.service &>>$LOGFILE
+# give full path of user.service because we are inside /app
+cp /home/centos/roboshop-shell/user.service /etc/systemd/system/user.service &>>$LOGFILE
 
-VALIDATE $? "copying catalogue.service"
+VALIDATE $? "copying user.service"
 
 systemctl daemon-reload &>>$LOGFILE
 
 VALIDATE $? "daemon reload"
 
-systemctl enable catalogue &>>$LOGFILE
+systemctl enable user &>>$LOGFILE
 
-VALIDATE $? "Enabling Catalogue"
+VALIDATE $? "Enabling user"
 
-systemctl start catalogue &>>$LOGFILE
+systemctl start user &>>$LOGFILE
 
-VALIDATE $? "Starting Catalogue"
+VALIDATE $? "Starting user"
 
 cp /home/centos/roboshop-shell/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOGFILE
 
@@ -99,6 +84,6 @@ yum install mongodb-org-shell -y &>>$LOGFILE
 
 VALIDATE $? "Installing mongo client"
 
-mongo --host mongodb.devopscollab.tech < /app/schema/catalogue.js &>>$LOGFILE
+mongo --host mongodb.devopscollab.tech </app/schema/user.js &>>$LOGFILE
 
-VALIDATE $? "loading catalogue data into mongodb"
+VALIDATE $? "loading user data into mongodb"

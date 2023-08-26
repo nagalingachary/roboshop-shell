@@ -38,12 +38,27 @@ VALIDATE $? "Installing NodeJS"
 #once the user is created, if you run this script 2nd time
 # this command will defnitely fail
 # IMPROVEMENT: first check the user already exist or not, if not exist then create
-useradd roboshop &>>$LOGFILE
+USER_ROBOSHOP=$(id roboshop)
+if [ $? -ne 0 ];
+then 
+    echo -e "$Y...USER roboshop is not present so creating one now..$N"
+    useradd roboshop &>>$LOGFILE
+else 
+    echo -e "$G...USER roboshop is already present so  skipping now.$N"
+fi
 
+#checking the app directory created or not
+VALIDATE_APP_DIR=$(cd /app)
 #write a condition to check directory already exist or not
-mkdir /app &>>$LOGFILE
+if [ $? -ne 0 ];
+then 
+    echo -e " $Y /app directory not there so creating one $N"
+    mkdir /app &>>$LOGFILE   
+else
+    echo -e "$G /app directory already present so skipping ....$N" 
+fi
 
-curl -o /tmp/user.zip https://roboshop-builds.s3.amazonaws.com/user.zip &>>$LOGFILE
+curl -o /tmp/user.zip  https://roboshop-artifacts.s3.amazonaws.com/user.zip &>>$LOGFILE
 
 VALIDATE $? "downloading user artifact"
 
@@ -84,6 +99,6 @@ yum install mongodb-org-shell -y &>>$LOGFILE
 
 VALIDATE $? "Installing mongo client"
 
-mongo --host mongodb.devopscollab.tech </app/schema/user.js &>>$LOGFILE
+mongo --host mongodb.devopscollab.tech < /app/schema/user.js &>>$LOGFILE
 
 VALIDATE $? "loading user data into mongodb"

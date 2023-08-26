@@ -43,10 +43,6 @@ else
     echo -e "$G...USER roboshop is already present so  skipping now.$N"
 fi
 
-
-curl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping.zip &>>$LOGFILE
-
-VALIDATE $? "Downloading shipping artifact"
 #checking the app directory created or not
 VALIDATE_APP_DIR=$(cd /app)
 #write a condition to check directory already exist or not
@@ -57,6 +53,14 @@ then
 else
     echo -e "$G /app directory already present so skipping ....$N" 
 fi
+
+curl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping.zip &>>$LOGFILE
+
+VALIDATE $? "Downloading shipping artifact"
+
+cd /app &>>$LOGFILE
+
+VALIDATE $? "Moving to app directory"
 
 unzip /tmp/shipping.zip &>>$LOGFILE
 

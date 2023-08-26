@@ -58,36 +58,47 @@ else
     echo -e "$G /app directory already present so skipping ....$N" 
 fi
 
-curl -o /tmp/cart.zip  https://roboshop-artifacts.s3.amazonaws.com/cart.zip &>>$LOGFILE
+curl -o /tmp/user.zip  https://roboshop-artifacts.s3.amazonaws.com/user.zip &>>$LOGFILE
 
-VALIDATE $? "downloading cart artifact"
+VALIDATE $? "downloading user artifact"
 
 cd /app &>>$LOGFILE
 
 VALIDATE $? "Moving into app directory"
 
-unzip /tmp/cart.zip &>>$LOGFILE
+unzip /tmp/user.zip &>>$LOGFILE
 
-VALIDATE $? "unzipping cart"
+VALIDATE $? "unzipping user"
 
 npm install &>>$LOGFILE
 
 VALIDATE $? "Installing dependencies"
 
-# give full path of cart.service because we are inside /app
-cp /home/centos/roboshop-shell/cart.service /etc/systemd/system/cart.service &>>$LOGFILE
+# give full path of user.service because we are inside /app
+cp /home/centos/roboshop-shell/user.service /etc/systemd/system/user.service &>>$LOGFILE
 
-VALIDATE $? "copying cart.service"
+VALIDATE $? "copying user.service"
 
 systemctl daemon-reload &>>$LOGFILE
 
 VALIDATE $? "daemon reload"
 
-systemctl enable cart &>>$LOGFILE
+systemctl enable user &>>$LOGFILE
 
-VALIDATE $? "Enabling cart"
+VALIDATE $? "Enabling user"
 
-systemctl start cart &>>$LOGFILE
+systemctl start user &>>$LOGFILE
 
-VALIDATE $? "Starting cart"
+VALIDATE $? "Starting user"
 
+cp /home/centos/roboshop-shell/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOGFILE
+
+VALIDATE $? "Copying mongo repo"
+
+yum install mongodb-org-shell -y &>>$LOGFILE
+
+VALIDATE $? "Installing mongo client"
+
+mongo --host mongodb.devopscollab.tech < /app/schema/user.js &>>$LOGFILE
+
+VALIDATE $? "loading user data into mongodb"

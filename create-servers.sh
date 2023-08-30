@@ -5,7 +5,7 @@ INSTANCE_TYPE=""
 IMAGE_ID=ami-03265a0778a880afb
 SECURITY_GROUP_ID=sg-0d342b0a03397ab91
 DOMAIN_NAME=devopscollab.tech
-HOSTED_ZONE_ID:Z01448573NWB13RKSRK57
+HOSTED_ZONE_ID=Z01448573NWB13RKSRK57
 
 # if mysql or mongodb instance_type should be t3.medium , for all others it is t2.micro
 
